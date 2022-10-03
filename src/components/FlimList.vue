@@ -1,79 +1,111 @@
-<template> 
-    <div class=" list" >
-        <Loading v-if="loading"></Loading>
-         <div
-      class="item"
-      v-for="(item, index) in list"
-      :key="index"
-      @click="goDetail(item.filmId)"
-    >
-      <div class="left">
-        <!-- 冒号 ： 表示动态属性 -->
-        <img v-lazy="item.poster" />
-      </div>
-      <div class="middle">
-        <div>{{ item.name }}</div>
-        <div v-if="type == 1">
-          <span>观众评分 </span>
-          <span class="grade">{{ item.grade }}</span>
+<template>
+  <div class="list scroll" :style="{ height: height + 'px' }">
+    <Loading v-if="loading"></Loading>
+    <div>
+      <div
+        class="item"
+        v-for="(item, index) in list"
+        :key="index"
+        @click="goDetail(item.filmId)"
+      >
+        <div class="left">
+          <!-- 冒号 ： 表示动态属性 -->
+          <img v-lazy="item.poster" />
         </div>
-        <!-- parseAvtors 是过滤器 方法名 -->
-        <div>主演：{{item.actors | parseAvtors }}</div>
-        <div>{{ item.nation }} | {{ item.runtime }}分钟</div>
-      </div>
-      <div class="right">
-        <span v-if="type == 1">购票</span>
-        <span v-else>预购</span>
+        <div class="middle">
+          <div>{{ item.name }}</div>
+          <div v-if="type == 1">
+            <span>观众评分 </span>
+            <span class="grade">{{ item.grade }}</span>
+          </div>
+          <!-- parseAvtors 是过滤器 方法名 -->
+          <div>主演：{{ item.actors | parseAvtors }}</div>
+          <div>{{ item.nation }} | {{ item.runtime }}分钟</div>
+        </div>
+        <div class="right">
+          <span v-if="type == 1">购票</span>
+          <span v-else>预购</span>
+        </div>
       </div>
     </div>
-
-    </div>
+  </div>
 </template>
 
 <script>
-import Loading from "@/components/Loading.vue"
+import { nowPlayingListData , comingSoonListData } from '@/api/api'
+import BScroll from "better-scroll";
+import Loading from "@/components/Loading.vue";
 export default {
-    data (){
-        return {
-            loading: true
-        }
-    },
-    props: [
-        'list','type'
-    ],
-    components:{
-        Loading
-    },
-    created () {
-        //判断是否获取到数据，获取到 去除 loading组件
-        if( this.list.length > 0 ){
-            this.loading = false
-        }else{
-            this.loading = true
-        }
-    },
-    // 过滤器 过滤 actors 中的 name
-    filters:{
-        parseAvtors :function (value) {
-            let actors = ''
-            value.forEach(element =>{
-                actors += element.name + ' ';
-            })
-            return actors
-        }
-    },
-    methods:{
-      goDetail: function (filmId) {
-        this.$router.push({name:'detail' , params:{filmId}})
+  data() {
+    return {
+      loading: true,
+      height: 0,
+      bs: null,
+      pageNum: 1,
+    };
+  },
+  mounted() {
+    this.height = document.documentElement.clientHeight - 100;
+    this.bs = new BScroll(".scroll", {
+      pullUpLoad: true,
+      pullDownRefresh: true,
+      click: true,
+    });
+     this.bs.on('pullingUp',()=>{
+      this.getData();
+      this.bs.finishPullUp();
+    });
+    this.bs.on('pullingDown',()=>{
+      this.getData();
+      this.bs.finishPullDown();
+    });
+  },
+  methods: {
+    getData: async function () {
+      this.pageNum ++;
+      if(this.type == 1){
+        var ret = await nowPlayingListData(this.pageNum)
+      }else{
+        var ret = await comingSoonListData(this.pageNum)
       }
+     console.log(ret.data);
     },
-    
- 
-}
+    goDetail: function (filmId) {
+      this.$router.push({ name: "detail", params: { filmId } });
+    },
+  },
+  props: ["list", "type"],
+  components: {
+    Loading,
+  },
+  created() {
+    //判断是否获取到数据，获取到 去除 loading组件
+    if (this.list.length > 0) {
+      this.loading = false;
+    } else {
+      this.loading = true;
+    }
+  },
+  // 过滤器 过滤 actors 中的 name
+  filters: {
+    parseAvtors: function (value) {
+      let actors = "";
+      value.forEach((element) => {
+        actors += element.name + " ";
+      });
+      return actors;
+    },
+  },
+
+};
 </script>
 
 <style lang="scss" scoped>
-  .list {
+.scroll {
+  overflow: hidden;
+}
+
+.list {
   margin-bottom: 50px;
 
   .item {

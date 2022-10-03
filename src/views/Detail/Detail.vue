@@ -34,21 +34,52 @@
         </div>
         <div class="row-scroll-wrapper actors-list"  style="height:140px;background: rgb(255,255,255);">
           <ul class="row-scroll-items-nav">
-            <!-- <li >
-              <div>
-                <div>
-                  <div>
-                    <img :src="film.actors.avatarAddress" alt="">
+            <li v-for="(item ,index) in film.actors"  :key="index" class="row-scroll-item">
+              <div class="actors-item" style="text-align: center;">
+                <div class="lazy-img actors-img" style="width: 85px; height: 85px; background: rgb(249, 249, 249);">
+                  <div class="padding" style="width: 85px; height: 85px; background: rgb(249, 249, 249);">
+                    <img :src="item.avatarAddress" alt="img" width="64px">
                   </div>
                 </div>
-                <span>黄力加</span>
-                <span>导演</span>
+                <span class="actors-name">{{item.name}}</span>
+                <span class="actors-role">{{item.role}}</span>
               </div>
-            </li> -->
+            </li>
           </ul>
         </div>
 
       </div>
+
+      <div class="photos">
+        <div class="photos-title-bar">
+          <span class="photos-title-text">剧照</span>
+          <span class="photos-to-all" v-if="film.actors.length">全部（{{film.actors.length}}）
+            <i class="iconfont icon-quanju_liebiaojiantou" style="font-size: 13px;"></i>
+          </span>
+        </div>
+
+        <div class="row-scroll-wrapper photos-list" style="height:140px;background:rgb(255,255,255)">
+          <ul class="row-scroll-items-nav">
+            <li class="row-scroll-item photos-item-wrap" style="width: 150px; min-width: 150px;">
+              <div class="photos-item">
+                <div class="lazy-img photos-img" style="width: 150px; height: 100px; background: rgb(249, 249, 249);">
+                  <div class="pading" 
+                  style="width: 150px; height: 100px; background: rgb(249, 249, 249);" 
+                  v-for="(item ,index) in film.actors" 
+                  :key="index">
+                    <img :src="item.avatarAddress" alt="img" width="64px">
+                  </div>
+              
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <a href="">
+        <div>选座购票</div>
+      </a>
 
 
     </div>
@@ -63,7 +94,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      film: { actors: [] },
+      film: '',
       newdata: {
         films: {
           actors: [
@@ -179,9 +210,9 @@ export default {
       },
     };
   },
-  async mounted() {
-    this.film = await this.newdata.films;
-    console.log(this.film.actors.length);
+  mounted() {
+    this.film =this.newdata.films;
+    console.log(this.film);
   },
   filters: {
     parsePremiereAt: function (value) {
@@ -194,9 +225,9 @@ export default {
   },
   created (){
     this.eventBus.$emit('footernav',false);
-    if( this.film.actors.length>0 ) {
+    // if( this.film.actors.length>0 ) {
       
-    } 
+    // } 
 
   },
   beforeDestroy (){
@@ -207,16 +238,113 @@ export default {
 
 <style lang="scss" scoped>
 .detail {
+  .photos{
+    .row-scroll-wrapper{
+      overflow-x: auto;
+      overflow-y: hidden;
+      height: 100PX;
+    }
+    .photos-title-bar{
+      span{
+        height: 22.5px;
+        line-height: 22px;
+        display: inline-block;
+      }
+      .photos-title-text{
+        font-size: 16px;
+        text-align: left;
+        color: #191a1b;
+      }
+      .photos-to-all{
+        font-size: 13px;
+        color: #797d82;
+        float: right;
+      }
+      height: 62px;
+      widows: 100%;
+      padding: 15px;
+    }
+    margin-top:10px;
+    margin-bottom: 60px;
+    background-color: #fff;
+  }
   .actors {
     margin-top: 10px;
     background-color: #fff;
 
     .row-scroll-wrapper{
+      .row-scroll-items-nav{
+        .row-scroll-item{
+          .photos-item{
+            .lazy-img{
+              .lazy-img-wrap{
+                img{
+                  left: 0;
+                }
+                .target-img{
+                  width: 100%;
+                  position: absolute;
+                  top: 50%;
+                }
+              }
+              .padding{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -webkit-box-align: center;
+              }
+              position: relative;
+            }
+          }
+          position: relative;
+          margin-right: 10px;
+          width: auto!important;
+          cursor: pointer;
+          display: block;
+          float: left;
+          width: 105px;
+        }
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        width: 100%;
+        margin: 0;
+        padding-left: 15px;
+        list-style: none;
+      }
       overflow-x: auto;
       overflow-y: hidden;
-      height: 236px;
+      height: 150px;
 
       .row-scroll-items-nav{
+        .row-scroll-item{
+          .actors-item{
+            .actors-role{
+              display: block;
+              font-size: 10px;
+              color: #797d82;
+            }
+            .actors-name{
+              display: block;
+              text-align: center;
+              padding-top: 10px;
+              font-size: 12px;
+              color: #191a1b;
+              width: 85px;
+              height: 18px;
+              display: block;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+          position: relative;
+          margin-right: 10px;
+          cursor: pointer;
+          display: block;
+          float: left;
+        }
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -226,6 +354,9 @@ export default {
         margin: 0;
         padding-left: 15px;
         list-style: none;
+
+        float: left;
+        width: 105px;
       }
     }
 
