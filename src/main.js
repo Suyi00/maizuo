@@ -29,6 +29,9 @@ Vue.use(VueLazyLoad,{
   
 })
 
+// 定义 事件总线   Vue.prototype.eventBus 是在 Vue 的原型上定义的 eventBus
+Vue.prototype.eventBus = new Vue()
+
 
 new Vue({
   router,

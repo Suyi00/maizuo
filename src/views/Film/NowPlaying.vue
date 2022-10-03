@@ -734,7 +734,6 @@ export default {
   },
   async mounted() {
     this.list = this.newdata.films
-    console.log(this.list );
   },
   components:{
     FilmList
