@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">爹一个康复手法时间的浪费口水大家</router-link> |
+      <router-link to="/about">爹一个康复手法时间的浪费口水大家</router-link>
     </nav>
     <router-view/>
   </div>
