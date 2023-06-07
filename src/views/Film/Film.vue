@@ -8,7 +8,7 @@
 <script>
 import FilmListTopNav from '@/components/FilmListTopNav.vue'
    export default{
-    components:{ 
+     components:{ 
         FilmListTopNav
         },
         data() {

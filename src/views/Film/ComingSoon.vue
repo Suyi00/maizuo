@@ -357,7 +357,7 @@ export default {
     },
      mounted (){
         this.list = this.newdata.films;
-        console.log(this.list);
+        // console.log(this.list);
     },
      components:{
     FilmList

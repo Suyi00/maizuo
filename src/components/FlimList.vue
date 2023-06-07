@@ -4,7 +4,7 @@
     <div>
       <div
         class="item"
-        v-for="(item, index) in list"
+        v-for="(item, index) in data"
         :key="index"
         @click="goDetail(item.filmId)"
       >
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { nowPlayingListData , comingSoonListData } from '@/api/api'
+import { nowPlayingListData, comingSoonListData } from "@/api/api";
 import BScroll from "better-scroll";
 import Loading from "@/components/Loading.vue";
 export default {
@@ -42,34 +42,44 @@ export default {
       height: 0,
       bs: null,
       pageNum: 1,
+      flag: true, //控制 是否继续 下滑。加载更多
     };
   },
   mounted() {
     this.height = document.documentElement.clientHeight - 100;
-    this.bs = new BScroll(".scroll", {
+  },
+  updated(){
+     this.bs = new BScroll(".scroll", {
       pullUpLoad: true,
       pullDownRefresh: true,
       click: true,
     });
-     this.bs.on('pullingUp',()=>{
+    this.bs.on("pullingUp", () => {
       this.getData();
       this.bs.finishPullUp();
     });
-    this.bs.on('pullingDown',()=>{
+    this.bs.on("pullingDown", () => {
       this.getData();
       this.bs.finishPullDown();
     });
   },
   methods: {
     getData: async function () {
-      this.pageNum ++;
-      if(this.type == 1){
-        var ret = await nowPlayingListData(this.pageNum)
-      }else{
-        var ret = await comingSoonListData(this.pageNum)
+      if (this.flag) {
+        this.pageNum++;
+        if (this.type == 1) {
+          var ret = await nowPlayingListData(this.pageNum);
+        } else {
+          var ret = await comingSoonListData(this.pageNum);
+        }
+        //如果请求的数据数量 小于< 10 ，就停止发送请求
+        if (ret.data.data.film.length < 10) {
+          this.flag = false;
+        }
+        this.data = this.data.concat(ret.data.data.films)
       }
-     console.log(ret.data);
     },
+
     goDetail: function (filmId) {
       this.$router.push({ name: "detail", params: { filmId } });
     },
@@ -79,8 +89,9 @@ export default {
     Loading,
   },
   created() {
+    this.data = this.list;
     //判断是否获取到数据，获取到 去除 loading组件
-    if (this.list.length > 0) {
+    if (this.data.length > 0) {
       this.loading = false;
     } else {
       this.loading = true;
@@ -96,7 +107,6 @@ export default {
       return actors;
     },
   },
-
 };
 </script>
 

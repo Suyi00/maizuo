@@ -20,10 +20,11 @@
 </template>
 
 <script>
-import('../assets/iconfont/iconfont.css')
+import { watch } from 'vue';
+import('../assets/iconfont/iconfont.css');
 export default{
-
 }
+
 </script>
 
 <style lang="scss" scoped>

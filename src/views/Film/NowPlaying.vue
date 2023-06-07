@@ -70,7 +70,7 @@ export default {
             name: "哥，你好",
             nation: "中国大陆",
             poster:
-              "https://pic.maizuo.com/usr/movie/f85b53cad68c6c0c2cba934107f2199e.jpg",
+              "https://img0.baidu.com/it/u=1221366983,2818511664&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
             premiereAt: 1662681600,
             runtime: 111,
             synopsis:

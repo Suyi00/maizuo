@@ -26,7 +26,6 @@ Vue.config.productionTip = false
 import VueLazyLoad from 'vue-lazyload'
 Vue.use(VueLazyLoad,{
    loading:"https://pic.maizuo.com/usr/movie/658feb900d73e61779b796b5cf3a9738.png"
-  
 })
 
 // 定义 事件总线   Vue.prototype.eventBus 是在 Vue 的原型上定义的 eventBus

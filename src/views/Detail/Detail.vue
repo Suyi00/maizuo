@@ -211,8 +211,8 @@ export default {
     };
   },
   mounted() {
-    this.film =this.newdata.films;
-    console.log(this.film);
+    // this.film =this.newdata.films;
+    // console.log(this.film);
   },
   filters: {
     parsePremiereAt: function (value) {
@@ -224,6 +224,8 @@ export default {
     Swiper,
   },
   created (){
+    this.film =this.newdata.films;
+    console.log(this.film);
     this.eventBus.$emit('footernav',false);
     // if( this.film.actors.length>0 ) {
       
